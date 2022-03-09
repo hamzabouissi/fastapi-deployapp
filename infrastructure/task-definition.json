@@ -1,7 +1,7 @@
 {
     "containerDefinitions": [
         {
-            "name": " fastapi-deployapp",
+            "name": "fastapi-deployapp",
             "image": "busybox",
             "cpu": 0,
             "portMappings": [
