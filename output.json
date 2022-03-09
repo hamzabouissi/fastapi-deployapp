@@ -1,0 +1,64 @@
+{
+    "taskDefinition": {
+        "taskDefinitionArn": "arn:aws:ecs:us-east-1:182476924183:task-definition/deploy_app:6",
+        "containerDefinitions": [
+            {
+                "name": "integration-ratehawk",
+                "image": "182476924183.dkr.ecr.us-east-1.amazonaws.com/intergration-ratehawk:eb846d4e32a6ffe2080afd53908953462bf9e971",
+                "cpu": 0,
+                "portMappings": [
+                    {
+                        "containerPort": 80,
+                        "hostPort": 80,
+                        "protocol": "tcp"
+                    },
+                    {
+                        "containerPort": 443,
+                        "hostPort": 443,
+                        "protocol": "tcp"
+                    }
+                ],
+                "essential": true,
+                "environment": [],
+                "mountPoints": [],
+                "volumesFrom": []
+            }
+        ],
+        "family": "deploy_app",
+        "taskRoleArn": "arn:aws:iam::182476924183:role/ecsTaskExecutionRole",
+        "executionRoleArn": "arn:aws:iam::182476924183:role/ecsTaskExecutionRole",
+        "networkMode": "awsvpc",
+        "revision": 6,
+        "volumes": [],
+        "status": "ACTIVE",
+        "requiresAttributes": [
+            {
+                "name": "com.amazonaws.ecs.capability.ecr-auth"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.task-iam-role"
+            },
+            {
+                "name": "ecs.capability.execution-role-ecr-pull"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+            },
+            {
+                "name": "ecs.capability.task-eni"
+            }
+        ],
+        "placementConstraints": [],
+        "compatibilities": [
+            "EC2",
+            "FARGATE"
+        ],
+        "requiresCompatibilities": [
+            "FARGATE"
+        ],
+        "cpu": "512",
+        "memory": "1024",
+        "registeredAt": "2022-03-07T21:59:05.501000+01:00",
+        "registeredBy": "arn:aws:iam::182476924183:user/hamza"
+    }
+}
