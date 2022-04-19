@@ -1,0 +1,66 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Creating VPC",
+    "Parameters": {
+        "SecurityGroupId": {
+            "Type": "String"
+            
+        },
+        "ProjectName": {
+            "Type": "String"
+            
+        },
+        "SubnetId": {
+            "Type": "String"
+            
+        },
+        "TaskDefinition": {
+            "Type": "String"
+            
+        },
+        "ServiceName": {
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "ECSService": {
+            "Type": "AWS::ECS::Service",
+            "Properties": {
+                "cluster": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            {
+                                "Ref": "ProjectName"
+                            },
+                            "Cluster"
+                        ]
+                    ]
+                },
+                "deploymentConfiguration": {
+                    "maximumPercent": 200,
+                    "minimumHealthyPercent": 100
+                },
+                "deploymentController": {
+                    "type": "ECS"
+                },
+                "desiredCount": 1,
+                "launchType": "FARGATE",
+                "networkConfiguration": {
+                    "awsvpcConfiguration": {
+                        "assignPublicIp": "ENABLED",
+                        "subnets": [
+                             {"Ref":"SubnetId"}
+                        ],
+                        "securityGroups": [
+                            {"Ref":"SecurityGroupId"}
+                        ]
+                    }
+                },
+                "schedulingStrategy": "REPLICA",
+                "serviceName": {"Ref":"ServiceName"},
+                "taskDefinition": {"Ref":"TaskDefinition"}
+            }
+        }
+    }
+}

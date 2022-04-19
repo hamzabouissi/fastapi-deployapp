@@ -1,0 +1,13 @@
+{
+  "roleName": "executionRole",
+  "policyArn": "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+  "vpcId": "vpc-0dc1bf7783fe928af",
+  "internetGatewayId": "igw-089fdb0fb24046cd9",
+  "routeTableId": "rtb-0fdc658b43b443902",
+  "subnetId": "subnet-0f324375ff98a40bd",
+  "securityGroupId": "sg-0b12b3e53da7aa96e",
+  "clusterName": "simple-app-Cluster",
+  "RepositoryArn": "arn:aws:ecr:us-east-1:182476924183:repository/simple-app",
+  "serviceName": "simple-app-Service",
+  "taskArn": "arn:aws:ecs:us-east-1:182476924183:task/simple-app-Cluster/109fe7444a864abb9cdf035812f3f592"
+}

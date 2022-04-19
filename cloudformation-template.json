@@ -1,0 +1,140 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Creating VPC",
+    "Parameters": {
+        "ProjectName": {
+            "Type": "String",
+            "Default": "development"
+        }
+    },
+    "Resources": {
+        "myVPC": {
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock": "10.0.0.0/16",
+                "EnableDnsSupport": "true",
+                "EnableDnsHostnames": "true"
+            }
+        },
+        "InternetGateWay": {
+            "Type": "AWS::EC2::InternetGateway"
+        },
+        "AttachGatewayVPC": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "DependsOn": [
+                "myVPC",
+                "InternetGateWay"
+            ],
+            "Properties": {
+                "InternetGatewayId": {
+                    "Ref": "InternetGateWay"
+                },
+                "VpcId": {
+                    "Ref": "myVPC"
+                }
+            }
+        },
+        "ROUTETABLE": {
+            "Type": "AWS::EC2::RouteTable",
+            "DependsOn": [
+                "myVPC"
+            ],
+            "Properties": {
+                "VpcId": {
+                    "Ref": "myVPC"
+                }
+            }
+        },
+        "ROUTE": {
+            "Type": "AWS::EC2::Route",
+            "DependsOn": [
+                "myVPC",
+                "InternetGateWay",
+                "ROUTETABLE"
+            ],
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "ROUTETABLE"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "GatewayId": {
+                    "Ref": "InternetGateWay"
+                }
+            }
+        },
+        "SUBNETFARGATE": {
+            "Type": "AWS::EC2::Subnet",
+            "DependsOn": [
+                "myVPC"
+            ],
+            "Properties": {
+                "AvailabilityZone": "us-east-1a",
+                "CidrBlock": "10.0.0.0/24",
+                "MapPublicIpOnLaunch": "true",
+                "VpcId": {
+                    "Ref": "myVPC"
+                }
+            }
+        },
+        "SUBNETROUTE": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "DependsOn": [
+                "SUBNETFARGATE",
+                "ROUTETABLE"
+            ],
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "ROUTETABLE"
+                },
+                "SubnetId": {
+                    "Ref": "SUBNETFARGATE"
+                }
+            }
+        },
+        "SGFARGATE": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "DependsOn": [
+                "myVPC"
+            ],
+            "Properties": {
+                "GroupDescription": "Fargate Security Group",
+                "GroupName": "Fargate-SG",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "Description": "Allow HTTP traffic on port 80",
+                        "FromPort": 80,
+                        "IpProtocol": "tcp",
+                        "ToPort": 80
+                    },
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "Description": "Allow HTTPS traffic on port 443",
+                        "FromPort": 443,
+                        "IpProtocol": "tcp",
+                        "ToPort": 443
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "myVPC"
+                }
+            }
+        },
+        "FARGATECLUSTER": {
+            "Type": "AWS::ECS::Cluster",
+            "Properties": {
+                "ClusterName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            {
+                                "Ref": "ProjectName"
+                            },
+                            "Cluster"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
+}
